@@ -1,4 +1,4 @@
-// ── DATA ──
+// DATA
 const products = [
   {name:'Кресло офисное EasyComfort Pro',sku:'SKU-00412',cat:'Мебель',price:8900,cost:4200,stock:2,wb:11,ozon:4,status:'critical'},
   {name:'Лампа настольная LightPro X2',sku:'SKU-00887',cat:'Освещение',price:2490,cost:990,stock:0,wb:0,ozon:0,status:'out'},
@@ -59,7 +59,7 @@ function searchCatalog(q){
   rows.forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none'});
 }
 
-// ── PRODUCT MODAL ──
+// PRODUCT MODAL
 function openProduct(name){
   const p=products.find(x=>x.name===name);if(!p)return;
   document.getElementById('pm-title').textContent=p.name;
@@ -84,7 +84,7 @@ function openNewProduct(){document.getElementById('new-product-modal').classList
 function closeNewProduct(){document.getElementById('new-product-modal').classList.remove('open')}
 function saveNewProduct(){closeNewProduct();showToast('✅ Товар добавлен в каталог')}
 
-// ── TABS ──
+// TABS
 const tabTitles={dashboard:'СВОДКА',catalog:'КАТАЛОГ ТОВАРОВ',warehouse:'СКЛАД',orders:'ЗАКАЗЫ И ДОСТАВКА',marketplaces:'ИНТЕГРАЦИИ С МАРКЕТПЛЕЙСАМИ',analytics:'АНАЛИТИКА'};
 function switchTab(name,el){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -94,7 +94,7 @@ function switchTab(name,el){
   document.getElementById('topbar-title').textContent=tabTitles[name]||name;
 }
 
-// ── SYNC ──
+// SYNC
 function doSync(btn,name){
   const orig=btn?btn.textContent:'';
   if(btn){btn.innerHTML='<span class="sync-spinning">↻</span> Синхронизация...';btn.disabled=true}
@@ -104,7 +104,7 @@ function doSync(btn,name){
   },1800);
 }
 
-// ── WAREHOUSE ──
+// WAREHOUSE
 const zones=[
   {name:'ЗОНА A',cap:'500 ячеек',pct:92,color:'var(--red)',items:[
     {name:'Кресла офисные',loc:'A-1 · A-2',qty:2},
@@ -135,7 +135,7 @@ document.getElementById('warehouse-grid').innerHTML=zones.map(z=>`
     </div>
   </div>`).join('');
 
-// ── ORDERS ──
+// ORDERS
 const sdekOrders=[
   {num:'#ORD-8840',name:'Петрова М.В.',city:'Санкт-Петербург',stages:4},
   {num:'#ORD-8836',name:'Волков К.Д.',city:'Новосибирск',stages:3},
@@ -180,7 +180,7 @@ document.getElementById('all-orders-tbody').innerHTML=allOrders.map(o=>`
     <td><span class="badge badge-${o.st}">${o.stl}</span></td>
   </tr>`).join('');
 
-// ── REVENUE CHART ──
+//REVENUE CHART
 const revData=[{l:'Пн',v:142,cur:false},{l:'Вт',v:198},{l:'Ср',v:167},{l:'Чт',v:231},{l:'Пт',v:184,cur:true},{l:'Сб',v:89},{l:'Вс',v:0}];
 const rmx=Math.max(...revData.map(d=>d.v));
 document.getElementById('rev-bars').innerHTML=revData.map(d=>`
@@ -191,7 +191,7 @@ document.getElementById('rev-bars').innerHTML=revData.map(d=>`
     <div class="rev-bar-label ${d.cur?'cur':''}">${d.l}</div>
   </div>`).join('');
 
-// ── TOP PRODUCTS ──
+// TOP PRODUCTS
 const topProds=[
   {name:'Монитор UltraView 27"',sku:'SKU-02201',rev:289000,sold:10},
   {name:'Клавиатура MechType Pro',sku:'SKU-01874',rev:174650,sold:35},
