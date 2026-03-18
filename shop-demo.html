@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockHub — Управление магазином и складом</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shop_demo.css">
+</head>
+<body>
+
+<div class="banner">
+  📦 <strong>ДЕМО — StockHub:</strong> управление интернет-магазином и складом
+  <a href="portfolio.html">← Портфолио</a>
+</div>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">StockHub</div>
+    <div class="logo-sub">ООО «Торговый дом»</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Главное</div>
+    <div class="nav-item active" onclick="switchTab('dashboard',this)">
+      <span class="nav-icon">📊</span> Сводка
+    </div>
+    <div class="nav-item" onclick="switchTab('catalog',this)">
+      <span class="nav-icon">📦</span> Каталог товаров
+    </div>
+    <div class="nav-item" onclick="switchTab('warehouse',this)">
+      <span class="nav-icon">🏭</span> Склад
+    </div>
+    <div class="nav-item" onclick="switchTab('orders',this)">
+      <span class="nav-icon">🚚</span> Заказы и доставка
+      <span class="nav-badge">5</span>
+    </div>
+    <div class="nav-section">Маркетплейсы</div>
+    <div class="nav-item" onclick="switchTab('marketplaces',this)">
+      <span class="nav-icon">🔗</span> Интеграции
+    </div>
+    <div class="nav-item" onclick="switchTab('analytics',this)">
+      <span class="nav-icon">📈</span> Аналитика
+    </div>
+    <div class="nav-section">Система</div>
+    <div class="nav-item" onclick="showToast('⚙️ Настройки — в полной версии')">
+      <span class="nav-icon">⚙️</span> Настройки
+    </div>
+    <div class="nav-item" onclick="showToast('👥 Сотрудники — в полной версии')">
+      <span class="nav-icon">👥</span> Сотрудники
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-av">ИМ</div>
+    <div>
+      <div class="user-name">Иван Морозов</div>
+      <div class="user-role">Менеджер склада</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">СВОДКА</div>
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="Поиск товара, заказа..." oninput="searchCatalog(this.value)">
+    </div>
+    <button class="tb-btn ghost" onclick="openNewProduct()">+ Товар</button>
+    <button class="tb-btn" onclick="showToast('🔄 Синхронизация запущена...',true)">↻ Синхронизировать</button>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div class="kpi-row">
+        <div class="kpi" style="--kpi-color:var(--accent)">
+          <div class="kpi-label">Выручка сегодня</div>
+          <div class="kpi-val">184 200</div>
+          <div class="kpi-sub"><span class="delta-up">↑ 23%</span> к вчера · ₽</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Заказов в обработке</div>
+          <div class="kpi-val">37</div>
+          <div class="kpi-sub"><span class="delta-up">↑ 8</span> новых за час</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--red)">
+          <div class="kpi-label">Товаров на нуле</div>
+          <div class="kpi-val">4</div>
+          <div class="kpi-sub"><span class="delta-dn">↑ 2</span> с вчера · требуют закупки</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--blue)">
+          <div class="kpi-label">Позиций на складе</div>
+          <div class="kpi-val">1 248</div>
+          <div class="kpi-sub">в 3 зонах · 84% заполнено</div>
+        </div>
+      </div>
+
+      <!-- Маркетплейсы мини -->
+      <div class="mp-row">
+        <div class="mp-card">
+          <div class="mp-header">
+            <div class="mp-logo" style="color:var(--wb)"><div class="mp-dot" style="background:var(--wb)"></div>WILDBERRIES</div>
+            <span class="badge badge-green">● Онлайн</span>
+          </div>
+          <div class="mp-stat"><span class="mp-stat-label">Активных товаров</span><span class="mp-stat-val">312</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Заказов сегодня</span><span class="mp-stat-val" style="color:var(--wb)">48</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Последняя синхр.</span><span class="mp-stat-val" style="color:var(--text3)">5 мин назад</span></div>
+          <button class="sync-btn" style="background:var(--wb-dim);color:var(--wb)" onclick="doSync(this,'WB')">↻ Выгрузить остатки</button>
+        </div>
+        <div class="mp-card">
+          <div class="mp-header">
+            <div class="mp-logo" style="color:#60a5fa"><div class="mp-dot" style="background:#60a5fa"></div>OZON</div>
+            <span class="badge badge-green">● Онлайн</span>
+          </div>
+          <div class="mp-stat"><span class="mp-stat-label">Активных товаров</span><span class="mp-stat-val">287</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Заказов сегодня</span><span class="mp-stat-val" style="color:#60a5fa">31</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Последняя синхр.</span><span class="mp-stat-val" style="color:var(--text3)">12 мин назад</span></div>
+          <button class="sync-btn" style="background:var(--oz-dim);color:#60a5fa" onclick="doSync(this,'OZON')">↻ Выгрузить остатки</button>
+        </div>
+        <div class="mp-card">
+          <div class="mp-header">
+            <div class="mp-logo" style="color:var(--green)"><div class="mp-dot" style="background:var(--green)"></div>СВОЙ МАГАЗИН</div>
+            <span class="badge badge-green">● Онлайн</span>
+          </div>
+          <div class="mp-stat"><span class="mp-stat-label">Активных товаров</span><span class="mp-stat-val">445</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Заказов сегодня</span><span class="mp-stat-val" style="color:var(--green)">19</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Последняя синхр.</span><span class="mp-stat-val" style="color:var(--text3)">Авто (1 мин)</span></div>
+          <button class="sync-btn" style="background:var(--green-dim);color:var(--green)" onclick="doSync(this,'Магазин')">↻ Обновить цены</button>
+        </div>
+        <div class="mp-card">
+          <div class="mp-header">
+            <div class="mp-logo" style="color:var(--yellow)"><div class="mp-dot" style="background:var(--yellow)"></div>ЯНДЕКС МАРКЕТ</div>
+            <span class="badge badge-yellow">⚠ Ошибка</span>
+          </div>
+          <div class="mp-stat"><span class="mp-stat-label">Активных товаров</span><span class="mp-stat-val">198</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Заказов сегодня</span><span class="mp-stat-val" style="color:var(--text3)">—</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Последняя синхр.</span><span class="mp-stat-val" style="color:var(--red)">2 ч назад · сбой</span></div>
+          <button class="sync-btn" style="background:var(--yellow-dim);color:var(--yellow)" onclick="doSync(this,'ЯМаркет')">↻ Переподключить</button>
+        </div>
+      </div>
+
+      <!-- Критичные остатки -->
+      <div class="sec">
+        <div class="sec-head">
+          <div class="sec-title">⚠ КРИТИЧНЫЕ ОСТАТКИ</div>
+          <span class="sec-action" onclick="switchTab('catalog',document.querySelector('[onclick*=catalog]'))">Весь каталог →</span>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Товар</th><th>Остаток</th><th>WB</th><th>OZON</th><th>Статус</th><th>Действие</th></tr></thead>
+            <tbody>
+              <tr onclick="openProduct('Кресло офисное EasyComfort Pro')">
+                <td><div class="prod-name">Кресло офисное EasyComfort Pro</div><div class="prod-sku">SKU-00412 · Мебель</div></td>
+                <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:8%;background:var(--red)"></div></div><div class="stock-num" style="color:var(--red)">2 шт</div></div></td>
+                <td><span class="badge badge-wb">11 резерв</span></td>
+                <td><span class="badge badge-oz">4 резерв</span></td>
+                <td><span class="badge badge-red">Критично</span></td>
+                <td><button class="tb-btn" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();showToast('📋 Заявка на закупку создана')">Закупить</button></td>
+              </tr>
+              <tr onclick="openProduct('Лампа настольная LightPro X2')">
+                <td><div class="prod-name">Лампа настольная LightPro X2</div><div class="prod-sku">SKU-00887 · Освещение</div></td>
+                <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:5%;background:var(--red)"></div></div><div class="stock-num" style="color:var(--red)">0 шт</div></div></td>
+                <td><span class="badge badge-red">Нет</span></td>
+                <td><span class="badge badge-red">Нет</span></td>
+                <td><span class="badge badge-red">Нет в наличии</span></td>
+                <td><button class="tb-btn" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();showToast('📋 Заявка на закупку создана')">Закупить</button></td>
+              </tr>
+              <tr onclick="openProduct('Коврик для мыши XL Gaming')">
+                <td><div class="prod-name">Коврик для мыши XL Gaming</div><div class="prod-sku">SKU-01203 · Аксессуары</div></td>
+                <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:15%;background:var(--yellow)"></div></div><div class="stock-num" style="color:var(--yellow)">7 шт</div></div></td>
+                <td><span class="badge badge-yellow">3 резерв</span></td>
+                <td><span class="badge badge-yellow">2 резерв</span></td>
+                <td><span class="badge badge-yellow">Мало</span></td>
+                <td><button class="tb-btn ghost" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();showToast('📩 Поставщику отправлен запрос')">Запросить</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Последние заказы -->
+      <div class="sec">
+        <div class="sec-head">
+          <div class="sec-title">ПОСЛЕДНИЕ ЗАКАЗЫ</div>
+          <span class="sec-action" onclick="switchTab('orders',document.querySelector('[onclick*=orders]'))">Все заказы →</span>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>№ Заказа</th><th>Покупатель</th><th>Сумма</th><th>Канал</th><th>Статус</th><th>Доставка</th></tr></thead>
+            <tbody>
+              <tr onclick="showToast('📦 Заказ #ORD-8841 открыт')">
+                <td><span style="color:var(--accent);font-weight:600">#ORD-8841</span></td>
+                <td>Смирнов А.К.</td><td>4 870 ₽</td>
+                <td><span class="badge badge-wb">WB</span></td>
+                <td><span class="badge badge-blue">Сборка</span></td>
+                <td>СДЭК · Москва</td>
+              </tr>
+              <tr onclick="showToast('📦 Заказ #ORD-8840 открыт')">
+                <td><span style="color:var(--accent);font-weight:600">#ORD-8840</span></td>
+                <td>Петрова М.В.</td><td>12 300 ₽</td>
+                <td><span class="badge badge-oz">OZON</span></td>
+                <td><span class="badge badge-green">Отправлен</span></td>
+                <td>Boxberry · СПб</td>
+              </tr>
+              <tr onclick="showToast('📦 Заказ #ORD-8839 открыт')">
+                <td><span style="color:var(--accent);font-weight:600">#ORD-8839</span></td>
+                <td>Козлов Д.Р.</td><td>2 150 ₽</td>
+                <td><span class="badge badge-green">Сайт</span></td>
+                <td><span class="badge badge-green">Доставлен</span></td>
+                <td>Самовывоз</td>
+              </tr>
+              <tr onclick="showToast('📦 Заказ #ORD-8838 открыт')">
+                <td><span style="color:var(--accent);font-weight:600">#ORD-8838</span></td>
+                <td>Федорова И.С.</td><td>7 640 ₽</td>
+                <td><span class="badge badge-wb">WB</span></td>
+                <td><span class="badge badge-orange">Новый</span></td>
+                <td>WB Логистика · Казань</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATALOG -->
+    <div class="tab-panel" id="tab-catalog">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+        <div class="tb-btn ghost" id="cat-filter-all" onclick="catFilter('all',this)" style="border-color:var(--accent);color:var(--accent);background:var(--accent-dim)">Все</div>
+        <div class="tb-btn ghost" id="cat-filter-Мебель" onclick="catFilter('Мебель',this)">Мебель</div>
+        <div class="tb-btn ghost" id="cat-filter-Освещение" onclick="catFilter('Освещение',this)">Освещение</div>
+        <div class="tb-btn ghost" id="cat-filter-Аксессуары" onclick="catFilter('Аксессуары',this)">Аксессуары</div>
+        <div class="tb-btn ghost" id="cat-filter-Электроника" onclick="catFilter('Электроника',this)">Электроника</div>
+        <span style="margin-left:auto;font-size:11px;color:var(--text3)" id="cat-count">12 товаров</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Товар</th><th>Категория</th><th>Цена</th><th>Склад</th><th>WB</th><th>OZON</th><th>Статус</th></tr></thead>
+          <tbody id="catalog-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- WAREHOUSE -->
+    <div class="tab-panel" id="tab-warehouse">
+      <div class="kpi-row" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi" style="--kpi-color:var(--blue)">
+          <div class="kpi-label">Всего позиций</div>
+          <div class="kpi-val">1 248</div>
+          <div class="kpi-sub">в 3 зонах хранения</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--yellow)">
+          <div class="kpi-label">Ожидают приёмки</div>
+          <div class="kpi-val">3</div>
+          <div class="kpi-sub">поставки · 248 единиц</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Заполненность</div>
+          <div class="kpi-val">84%</div>
+          <div class="kpi-sub">1 248 из 1 500 ячеек</div>
+        </div>
+      </div>
+      <div class="warehouse-grid" id="warehouse-grid"></div>
+      <div class="sec">
+        <div class="sec-head"><div class="sec-title">ДВИЖЕНИЕ ТОВАРОВ</div></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Время</th><th>Операция</th><th>Товар</th><th>Кол-во</th><th>Зона</th><th>Сотрудник</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--text3)">13:42</td><td><span class="badge badge-green">Приход</span></td><td>Кресло EasyComfort Pro</td><td style="color:var(--green)">+50</td><td>A-3</td><td>Дмитриев</td></tr>
+              <tr><td style="color:var(--text3)">13:15</td><td><span class="badge badge-orange">Расход</span></td><td>Лампа LightPro X2</td><td style="color:var(--red)">−12</td><td>B-1</td><td>Сидоров</td></tr>
+              <tr><td style="color:var(--text3)">12:58</td><td><span class="badge badge-blue">Перемещение</span></td><td>Коврик XL Gaming</td><td>20</td><td>C-2 → A-1</td><td>Волков</td></tr>
+              <tr><td style="color:var(--text3)">12:30</td><td><span class="badge badge-orange">Расход</span></td><td>Монитор UltraView 27"</td><td style="color:var(--red)">−3</td><td>B-2</td><td>Дмитриев</td></tr>
+              <tr><td style="color:var(--text3)">11:47</td><td><span class="badge badge-green">Приход</span></td><td>Клавиатура MechType Pro</td><td style="color:var(--green)">+100</td><td>C-1</td><td>Сидоров</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS & DELIVERY -->
+    <div class="tab-panel" id="tab-orders">
+      <div class="kpi-row">
+        <div class="kpi" style="--kpi-color:var(--orange,#f97316)">
+          <div class="kpi-label">Новых заказов</div>
+          <div class="kpi-val" style="color:var(--accent)">12</div>
+          <div class="kpi-sub">ожидают сборки</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--blue)">
+          <div class="kpi-label">В пути</div>
+          <div class="kpi-val" style="color:var(--blue)">23</div>
+          <div class="kpi-sub">СДЭК · Boxberry · WB</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Доставлено сегодня</div>
+          <div class="kpi-val" style="color:var(--green)">31</div>
+          <div class="kpi-sub"><span class="delta-up">↑ 6</span> к вчера</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--red)">
+          <div class="kpi-label">Возвраты</div>
+          <div class="kpi-val" style="color:var(--red)">2</div>
+          <div class="kpi-sub">на рассмотрении</div>
+        </div>
+      </div>
+      <div class="delivery-grid">
+        <div class="delivery-card">
+          <div class="delivery-head">
+            <div class="delivery-title">🚚 СДЭК</div>
+            <span class="badge badge-green">Подключён</span>
+          </div>
+          <div id="sdek-orders"></div>
+        </div>
+        <div class="delivery-card">
+          <div class="delivery-head">
+            <div class="delivery-title">📫 BOXBERRY</div>
+            <span class="badge badge-green">Подключён</span>
+          </div>
+          <div id="boxberry-orders"></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-head"><div class="sec-title">ВСЕ ЗАКАЗЫ</div>
+          <div style="display:flex;gap:6px">
+            <button class="tb-btn ghost" style="padding:5px 10px;font-size:11px" onclick="showToast('📥 Экспорт в Excel...')">Экспорт</button>
+            <button class="tb-btn" style="padding:5px 10px;font-size:11px" onclick="showToast('🖨 Печать накладных...')">Печать накладных</button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>№</th><th>Покупатель</th><th>Товары</th><th>Сумма</th><th>Канал</th><th>Доставка</th><th>Статус</th></tr></thead>
+            <tbody id="all-orders-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKETPLACES -->
+    <div class="tab-panel" id="tab-marketplaces">
+      <div class="mp-row" style="margin-bottom:18px">
+        <div class="mp-card" style="flex:1.2">
+          <div class="mp-header">
+            <div class="mp-logo" style="color:var(--wb);font-size:18px"><div class="mp-dot" style="background:var(--wb)"></div>WILDBERRIES API</div>
+            <span class="badge badge-green">● Активно</span>
+          </div>
+          <div class="mp-stat"><span class="mp-stat-label">API-ключ</span><span class="mp-stat-val" style="font-family:monospace;color:var(--text3)">wb_••••••••••••9f2a</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">FBO товаров</span><span class="mp-stat-val">218</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">FBS товаров</span><span class="mp-stat-val">94</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Автосинхр. остатков</span><span class="mp-stat-val" style="color:var(--green)">Каждые 15 мин</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Автовыгрузка цен</span><span class="mp-stat-val" style="color:var(--green)">При изменении</span></div>
+          <button class="sync-btn" style="background:var(--wb-dim);color:var(--wb);margin-top:10px" onclick="doSync(this,'WB полный')">↻ Полная синхронизация</button>
+        </div>
+        <div class="mp-card" style="flex:1.2">
+          <div class="mp-header">
+            <div class="mp-logo" style="color:#60a5fa;font-size:18px"><div class="mp-dot" style="background:#60a5fa"></div>OZON SELLER API</div>
+            <span class="badge badge-green">● Активно</span>
+          </div>
+          <div class="mp-stat"><span class="mp-stat-label">Client ID</span><span class="mp-stat-val" style="font-family:monospace;color:var(--text3)">4471••••</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">FBO товаров</span><span class="mp-stat-val">180</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">FBS товаров</span><span class="mp-stat-val">107</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Автосинхр. остатков</span><span class="mp-stat-val" style="color:var(--green)">Каждые 10 мин</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Автовыгрузка цен</span><span class="mp-stat-val" style="color:var(--green)">При изменении</span></div>
+          <button class="sync-btn" style="background:var(--oz-dim);color:#60a5fa;margin-top:10px" onclick="doSync(this,'OZON полный')">↻ Полная синхронизация</button>
+        </div>
+        <div class="mp-card">
+          <div class="mp-header">
+            <div class="mp-logo" style="color:var(--yellow);font-size:18px"><div class="mp-dot" style="background:var(--yellow)"></div>ЯНДЕКС МАРКЕТ</div>
+            <span class="badge badge-red">● Ошибка</span>
+          </div>
+          <div class="mp-stat"><span class="mp-stat-label">Campaign ID</span><span class="mp-stat-val" style="font-family:monospace;color:var(--text3)">8820••••</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Ошибка</span><span class="mp-stat-val" style="color:var(--red)">Token expired</span></div>
+          <div class="mp-stat"><span class="mp-stat-label">Последний успех</span><span class="mp-stat-val" style="color:var(--text3)">2 ч назад</span></div>
+          <button class="sync-btn" style="background:var(--yellow-dim);color:var(--yellow);margin-top:10px" onclick="doSync(this,'ЯМаркет')">↻ Обновить токен</button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-head"><div class="sec-title">РАСХОЖДЕНИЯ ОСТАТКОВ</div></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Товар</th><th>Склад</th><th>WB</th><th>OZON</th><th>Расхождение</th><th>Действие</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><div class="prod-name">Кресло офисное EasyComfort Pro</div><div class="prod-sku">SKU-00412</div></td>
+                <td>2</td><td style="color:var(--wb)">11</td><td style="color:#60a5fa">4</td>
+                <td><span class="badge badge-red">WB: −9 · OZON: −2</span></td>
+                <td><button class="tb-btn" style="padding:4px 10px;font-size:11px" onclick="showToast('✅ Остатки синхронизированы')">Исправить</button></td>
+              </tr>
+              <tr>
+                <td><div class="prod-name">Монитор UltraView 27"</div><div class="prod-sku">SKU-02201</div></td>
+                <td>15</td><td style="color:var(--wb)">12</td><td style="color:#60a5fa">15</td>
+                <td><span class="badge badge-yellow">WB: −3</span></td>
+                <td><button class="tb-btn ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('✅ WB обновлён')">Исправить</button></td>
+              </tr>
+              <tr>
+                <td><div class="prod-name">Клавиатура MechType Pro</div><div class="prod-sku">SKU-01874</div></td>
+                <td>100</td><td style="color:var(--wb)">100</td><td style="color:#60a5fa">97</td>
+                <td><span class="badge badge-yellow">OZON: −3</span></td>
+                <td><button class="tb-btn ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('✅ OZON обновлён')">Исправить</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="tab-panel" id="tab-analytics">
+      <div class="analytics-top">
+        <div class="channel-bar" style="grid-column:span 1">
+          <div class="ch-title">Выручка по каналам — март</div>
+          <div class="ch-item">
+            <div class="ch-icon" style="background:var(--wb-dim);color:var(--wb)">WB</div>
+            <div class="ch-info">
+              <div class="ch-name">Wildberries</div>
+              <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:62%;background:var(--wb)"></div></div>
+            </div>
+            <div class="ch-val" style="color:var(--wb)">782к</div>
+          </div>
+          <div class="ch-item">
+            <div class="ch-icon" style="background:var(--oz-dim);color:#60a5fa">OZ</div>
+            <div class="ch-info">
+              <div class="ch-name">OZON</div>
+              <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:41%;background:#60a5fa"></div></div>
+            </div>
+            <div class="ch-val" style="color:#60a5fa">521к</div>
+          </div>
+          <div class="ch-item">
+            <div class="ch-icon" style="background:var(--green-dim);color:var(--green)">🛒</div>
+            <div class="ch-info">
+              <div class="ch-name">Свой сайт</div>
+              <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:25%;background:var(--green)"></div></div>
+            </div>
+            <div class="ch-val" style="color:var(--green)">314к</div>
+          </div>
+          <div class="ch-item">
+            <div class="ch-icon" style="background:var(--yellow-dim);color:var(--yellow)">ЯМ</div>
+            <div class="ch-info">
+              <div class="ch-name">Яндекс Маркет</div>
+              <div class="ch-bar-bg"><div class="ch-bar-fill" style="width:10%;background:var(--yellow)"></div></div>
+            </div>
+            <div class="ch-val" style="color:var(--yellow)">131к</div>
+          </div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--accent)">
+          <div class="kpi-label">Выручка март</div>
+          <div class="kpi-val">1 748 000 ₽</div>
+          <div class="kpi-sub"><span class="delta-up">↑ 31%</span> к февралю</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="kpi" style="--kpi-color:var(--green);padding:12px 14px">
+            <div class="kpi-label">Заказов за месяц</div>
+            <div class="kpi-val" style="font-size:26px">2 341</div>
+            <div class="kpi-sub"><span class="delta-up">↑ 18%</span></div>
+          </div>
+          <div class="kpi" style="--kpi-color:var(--blue);padding:12px 14px">
+            <div class="kpi-label">Средний чек</div>
+            <div class="kpi-val" style="font-size:26px">1 872 ₽</div>
+            <div class="kpi-sub"><span class="delta-up">↑ 4%</span></div>
+          </div>
+          <div class="kpi" style="--kpi-color:var(--purple,#a855f7);padding:12px 14px">
+            <div class="kpi-label">Возвраты</div>
+            <div class="kpi-val" style="font-size:26px;color:var(--text3)">2.1%</div>
+            <div class="kpi-sub"><span class="delta-up">↓ 0.4%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="revenue-chart">
+        <div class="sec-head">
+          <div class="sec-title">ДИНАМИКА ВЫРУЧКИ</div>
+          <div style="display:flex;gap:4px">
+            <div class="tb-btn ghost" style="padding:4px 10px;font-size:11px;border-color:var(--accent);color:var(--accent);background:var(--accent-dim)">Неделя</div>
+            <div class="tb-btn ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('📊 Месяц — в полной версии')">Месяц</div>
+          </div>
+        </div>
+        <div class="rev-bars" id="rev-bars"></div>
+      </div>
+
+      <div class="analytics-bottom">
+        <div class="top-products">
+          <div class="tp-head">ТОП ТОВАРОВ ПО ВЫРУЧКЕ</div>
+          <div id="top-products-list"></div>
+        </div>
+        <div class="categories-chart">
+          <div class="tp-head" style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px">КАТЕГОРИИ</div>
+          <div style="padding:16px" id="categories-list"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="product-modal" onclick="if(event.target===this)closeProduct()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title" id="pm-title">—</div>
+        <div class="modal-sub" id="pm-sku">—</div>
+      </div>
+      <div class="modal-x" onclick="closeProduct()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">Основное</div>
+        <div class="modal-grid">
+          <div class="mf"><label>Цена продажи</label><div class="mf-val accent" id="pm-price">—</div></div>
+          <div class="mf"><label>Закупочная цена</label><div class="mf-val" id="pm-cost">—</div></div>
+          <div class="mf"><label>На складе</label><div class="mf-val green" id="pm-stock">—</div></div>
+          <div class="mf"><label>Категория</label><div class="mf-val" id="pm-cat">—</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Статус на маркетплейсах</div>
+        <div id="pm-mp-list"></div>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn-ghost" onclick="closeProduct()">Закрыть</button>
+      <button class="btn-solid" onclick="showToast('✏️ Редактирование — в полной версии');closeProduct()">Редактировать</button>
+      <button class="btn-solid" style="background:var(--wb)" onclick="doSync(null,'WB');closeProduct()">↻ Выгрузить на WB</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW PRODUCT MODAL -->
+<div class="modal-overlay" id="new-product-modal" onclick="if(event.target===this)closeNewProduct()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div><div class="modal-title">НОВЫЙ ТОВАР</div><div class="modal-sub">Добавление в каталог</div></div>
+      <div class="modal-x" onclick="closeNewProduct()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">Название</label><input class="f-input" placeholder="Кресло офисное..."></div>
+        <div class="f-group"><label class="f-label">Артикул (SKU)</label><input class="f-input" placeholder="SKU-00000"></div>
+      </div>
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">Категория</label>
+          <select class="f-select"><option>Мебель</option><option>Освещение</option><option>Аксессуары</option><option>Электроника</option></select>
+        </div>
+        <div class="f-group"><label class="f-label">Единица измерения</label>
+          <select class="f-select"><option>шт</option><option>уп</option><option>кг</option></select>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">Цена продажи, ₽</label><input class="f-input" type="number" placeholder="0"></div>
+        <div class="f-group"><label class="f-label">Закупочная цена, ₽</label><input class="f-input" type="number" placeholder="0"></div>
+      </div>
+      <div class="f-group"><label class="f-label">Начальный остаток</label><input class="f-input" type="number" placeholder="0"></div>
+      <div class="f-group">
+        <label class="f-label">Выгружать на маркетплейсы</label>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" checked> Wildberries</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" checked> OZON</label>
+          <label style="display:flex;align-items:center;gap=6px;font-size:12px;cursor:pointer"><input type="checkbox"> Яндекс Маркет</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn-ghost" onclick="closeNewProduct()">Отмена</button>
+      <button class="btn-solid" onclick="saveNewProduct()">✓ Добавить товар</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toast-msg">Готово</span>
+</div>
+<script type="text/javascript" src="js/shop_demo.js"></script>
+</body>
+</html>

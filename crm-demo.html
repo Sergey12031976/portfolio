@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МедЦРМ — Демо системы управления клиникой</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/crm_demo.css">
+</head>
+<body>
+
+<div class="demo-banner">
+  🩺 <strong>ДЕМО-ВЕРСИЯ</strong> — МедЦРМ: система управления клиникой. Все данные вымышлены.
+  <a href="portfolio.html">← Вернуться в портфолио</a>
+</div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">МедЦРМ</div>
+      <div class="logo-sub">Клиника «Здоровье Плюс»</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Основное</div>
+      <div class="nav-item active" onclick="switchTab('dashboard', this)">
+        <span class="nav-icon">📊</span> Сводка
+      </div>
+      <div class="nav-item" onclick="switchTab('patients', this)">
+        <span class="nav-icon">🧑‍⚕️</span> Пациенты
+        <span class="nav-badge">3</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('schedule', this)">
+        <span class="nav-icon">📅</span> Расписание
+      </div>
+      <div class="nav-item" onclick="switchTab('analytics', this)">
+        <span class="nav-icon">📈</span> Аналитика
+      </div>
+      <div class="nav-group-label" style="margin-top:12px">Справочники</div>
+      <div class="nav-item" onclick="showToast('📋 Раздел доступен в полной версии')">
+        <span class="nav-icon">👩‍⚕️</span> Врачи
+      </div>
+      <div class="nav-item" onclick="showToast('📋 Раздел доступен в полной версии')">
+        <span class="nav-icon">🏥</span> Кабинеты
+      </div>
+      <div class="nav-item" onclick="showToast('📋 Раздел доступен в полной версии')">
+        <span class="nav-icon">💊</span> Услуги
+      </div>
+      <div class="nav-item" onclick="showToast('📋 Раздел доступен в полной версии')">
+        <span class="nav-icon">💳</span> Платежи
+      </div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">АС</div>
+      <div>
+        <div class="user-name">Анна Соколова</div>
+        <div class="user-role">Администратор</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Сводка — сегодня</div>
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Поиск пациентов..." oninput="filterPatients(this.value)">
+      </div>
+      <button class="topbar-btn" onclick="openBooking()">+ Записать пациента</button>
+      <div class="topbar-notif" onclick="showToast('🔔 Нет новых уведомлений')">
+        🔔<div class="notif-dot"></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Визитов сегодня</div>
+            <div class="kpi-value green">24</div>
+            <div class="kpi-delta"><span class="delta-up">↑ 8%</span> к прошлой неделе</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Свободных слотов</div>
+            <div class="kpi-value blue">7</div>
+            <div class="kpi-delta">из 31 на сегодня</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Выручка, ₽</div>
+            <div class="kpi-value green">68 400</div>
+            <div class="kpi-delta"><span class="delta-up">↑ 12%</span> к среде</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Не пришли</div>
+            <div class="kpi-value red">2</div>
+            <div class="kpi-delta"><span class="delta-down">↑ 1</span> к прошлой неделе</div>
+          </div>
+        </div>
+
+        <div class="sec-header">
+          <div class="sec-title">Ближайшие визиты</div>
+          <a class="sec-link" onclick="switchTab('schedule', document.querySelector('[onclick*=schedule]'))">Всё расписание →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Время</th><th>Пациент</th><th>Врач</th><th>Услуга</th><th>Статус</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="openPatient('П-1042')">
+                <td><strong>13:30</strong></td>
+                <td><div class="patient-name">Морозова Т.И.</div><div class="patient-id">#П-1042</div></td>
+                <td>Петров А.В.</td><td>Кардиология</td>
+                <td><span class="badge badge-yellow">Ожидает</span></td>
+              </tr>
+              <tr onclick="openPatient('П-0831')">
+                <td><strong>14:00</strong></td>
+                <td><div class="patient-name">Захаров М.П.</div><div class="patient-id">#П-0831</div></td>
+                <td>Сидорова Е.К.</td><td>Терапия</td>
+                <td><span class="badge badge-green">Подтверждён</span></td>
+              </tr>
+              <tr onclick="openPatient('П-2107')">
+                <td><strong>14:30</strong></td>
+                <td><div class="patient-name">Новикова О.Д.</div><div class="patient-id">#П-2107</div></td>
+                <td>Кузнецов И.Р.</td><td>Неврология</td>
+                <td><span class="badge badge-green">Подтверждён</span></td>
+              </tr>
+              <tr onclick="openPatient('П-0576')">
+                <td><strong>15:00</strong></td>
+                <td><div class="patient-name">Соловьёв А.Б.</div><div class="patient-id">#П-0576</div></td>
+                <td>Петров А.В.</td><td>Кардиология</td>
+                <td><span class="badge badge-blue">На приёме</span></td>
+              </tr>
+              <tr onclick="openPatient('П-1389')">
+                <td><strong>15:30</strong></td>
+                <td><div class="patient-name">Волкова С.Н.</div><div class="patient-id">#П-1389</div></td>
+                <td>Сидорова Е.К.</td><td>УЗИ брюшной полости</td>
+                <td><span class="badge badge-gray">Новый</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bottom-row">
+          <div class="mini-card">
+            <div class="mini-card-header">
+              <div class="mini-card-title">Загруженность по часам</div>
+              <div style="font-size:11px; color:var(--muted)">сегодня</div>
+            </div>
+            <div class="chart-area">
+              <div class="chart-bars" id="hourly-chart"></div>
+            </div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-card-header">
+              <div class="mini-card-title">Следующие визиты</div>
+              <a class="sec-link" onclick="switchTab('schedule', document.querySelector('[onclick*=schedule]'))">все →</a>
+            </div>
+            <div class="appt-list">
+              <div class="appt-item" onclick="openPatient('П-1042')">
+                <div class="appt-time">13:30</div>
+                <div class="appt-info">
+                  <div class="appt-name">Морозова Т.И.</div>
+                  <div class="appt-doctor">Петров А.В. — Кардиология</div>
+                </div>
+                <div class="appt-dot" style="background:var(--yellow)"></div>
+              </div>
+              <div class="appt-item" onclick="openPatient('П-0831')">
+                <div class="appt-time">14:00</div>
+                <div class="appt-info">
+                  <div class="appt-name">Захаров М.П.</div>
+                  <div class="appt-doctor">Сидорова Е.К. — Терапия</div>
+                </div>
+                <div class="appt-dot" style="background:var(--accent)"></div>
+              </div>
+              <div class="appt-item" onclick="openPatient('П-2107')">
+                <div class="appt-time">14:30</div>
+                <div class="appt-info">
+                  <div class="appt-name">Новикова О.Д.</div>
+                  <div class="appt-doctor">Кузнецов И.Р. — Неврология</div>
+                </div>
+                <div class="appt-dot" style="background:var(--accent)"></div>
+              </div>
+              <div class="appt-item" onclick="openPatient('П-1389')">
+                <div class="appt-time">15:30</div>
+                <div class="appt-info">
+                  <div class="appt-name">Волкова С.Н.</div>
+                  <div class="appt-doctor">Сидорова Е.К. — УЗИ</div>
+                </div>
+                <div class="appt-dot" style="background:var(--muted)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PATIENTS ── -->
+      <div class="tab-panel" id="tab-patients">
+        <div class="patients-toolbar">
+          <div class="filter-pill active" onclick="setFilter(this,'all')">Все пациенты</div>
+          <div class="filter-pill" onclick="setFilter(this,'new')">🆕 Новые</div>
+          <div class="filter-pill" onclick="setFilter(this,'active')">✅ Активные</div>
+          <div class="filter-pill" onclick="setFilter(this,'chronic')">⚕️ Хронические</div>
+          <div class="patients-count" id="patients-count">Найдено: 8 пациентов</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Пациент</th><th>Возраст</th><th>Телефон</th><th>Врач</th><th>Последний визит</th><th>Следующая запись</th><th>Статус</th></tr>
+            </thead>
+            <tbody id="patients-table">
+              <tr onclick="openPatient('П-1042')" data-status="active">
+                <td><div class="patient-name">Морозова Татьяна Игоревна</div><div class="patient-id">#П-1042</div></td>
+                <td>52</td><td>+7 (912) 345-67-89</td><td>Петров А.В.</td><td>14.03.2025</td><td>17.03 13:30</td>
+                <td><span class="badge badge-green">Активный</span></td>
+              </tr>
+              <tr onclick="openPatient('П-0831')" data-status="active">
+                <td><div class="patient-name">Захаров Михаил Петрович</div><div class="patient-id">#П-0831</div></td>
+                <td>38</td><td>+7 (903) 221-44-10</td><td>Сидорова Е.К.</td><td>02.03.2025</td><td>17.03 14:00</td>
+                <td><span class="badge badge-green">Активный</span></td>
+              </tr>
+              <tr onclick="openPatient('П-2107')" data-status="chronic">
+                <td><div class="patient-name">Новикова Ольга Дмитриевна</div><div class="patient-id">#П-2107</div></td>
+                <td>67</td><td>+7 (916) 877-20-33</td><td>Кузнецов И.Р.</td><td>10.03.2025</td><td>17.03 14:30</td>
+                <td><span class="badge badge-yellow">Хронический</span></td>
+              </tr>
+              <tr onclick="openPatient('П-0576')" data-status="active">
+                <td><div class="patient-name">Соловьёв Андрей Борисович</div><div class="patient-id">#П-0576</div></td>
+                <td>45</td><td>+7 (926) 100-90-80</td><td>Петров А.В.</td><td>15.03.2025</td><td>17.03 15:00</td>
+                <td><span class="badge badge-blue">На приёме</span></td>
+              </tr>
+              <tr onclick="openPatient('П-1389')" data-status="new">
+                <td><div class="patient-name">Волкова Светлана Николаевна</div><div class="patient-id">#П-1389</div></td>
+                <td>29</td><td>+7 (909) 555-12-34</td><td>Сидорова Е.К.</td><td>—</td><td>17.03 15:30</td>
+                <td><span class="badge badge-gray">Новый</span></td>
+              </tr>
+              <tr onclick="openPatient('П-0344')" data-status="chronic">
+                <td><div class="patient-name">Ершов Дмитрий Алексеевич</div><div class="patient-id">#П-0344</div></td>
+                <td>71</td><td>+7 (985) 663-41-07</td><td>Кузнецов И.Р.</td><td>05.03.2025</td><td>24.03 10:00</td>
+                <td><span class="badge badge-yellow">Хронический</span></td>
+              </tr>
+              <tr onclick="openPatient('П-2203')" data-status="new">
+                <td><div class="patient-name">Белова Ирина Сергеевна</div><div class="patient-id">#П-2203</div></td>
+                <td>33</td><td>+7 (931) 772-58-90</td><td>—</td><td>—</td><td>21.03 11:30</td>
+                <td><span class="badge badge-gray">Новый</span></td>
+              </tr>
+              <tr onclick="openPatient('П-1755')" data-status="active">
+                <td><div class="patient-name">Орлов Павел Игоревич</div><div class="patient-id">#П-1755</div></td>
+                <td>56</td><td>+7 (965) 319-22-44</td><td>Петров А.В.</td><td>12.03.2025</td><td>25.03 16:00</td>
+                <td><span class="badge badge-green">Активный</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SCHEDULE ── -->
+      <div class="tab-panel" id="tab-schedule">
+        <div class="sec-header" style="margin-bottom:14px">
+          <div style="display:flex; gap:8px; align-items:center">
+            <button class="btn-outline" style="padding:6px 14px" onclick="showToast('◀ Предыдущая неделя')">◀</button>
+            <span style="font-family:'Fraunces',serif; font-size:16px; font-weight:600">17–21 марта 2025</span>
+            <button class="btn-outline" style="padding:6px 14px" onclick="showToast('▶ Следующая неделя')">▶</button>
+          </div>
+          <button class="topbar-btn" onclick="openBooking()">+ Записать</button>
+        </div>
+        <div class="schedule-grid" id="schedule-grid"></div>
+      </div>
+
+      <!-- ── ANALYTICS ── -->
+      <div class="tab-panel" id="tab-analytics">
+        <div class="analytics-kpi">
+          <div class="kpi-card">
+            <div class="kpi-label">Выручка за месяц</div>
+            <div class="kpi-value green">1 248 600 ₽</div>
+            <div class="kpi-delta"><span class="delta-up">↑ 18%</span> к февралю</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Всего визитов</div>
+            <div class="kpi-value blue">431</div>
+            <div class="kpi-delta"><span class="delta-up">↑ 24</span> к прошлому месяцу</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Средний чек</div>
+            <div class="kpi-value">2 896 ₽</div>
+            <div class="kpi-delta"><span class="delta-up">↑ 4%</span> к февралю</div>
+          </div>
+        </div>
+
+        <div class="chart-full">
+          <div class="chart-full-header">
+            <div class="sec-title">Визиты по дням недели</div>
+            <div class="chart-tabs">
+              <div class="chart-tab active" onclick="setChartTab(this,'visits')">Визиты</div>
+              <div class="chart-tab" onclick="setChartTab(this,'revenue')">Выручка</div>
+            </div>
+          </div>
+          <div class="chart-body">
+            <div class="big-bars" id="big-chart"></div>
+          </div>
+        </div>
+
+        <div class="analytics-bottom">
+          <div class="doctors-list">
+            <div class="mini-card-header">
+              <div class="mini-card-title">Загруженность врачей</div>
+              <div style="font-size:11px; color:var(--muted)">этот месяц</div>
+            </div>
+            <div id="doctors-list"></div>
+          </div>
+          <div class="diagnoses-list">
+            <div class="mini-card-header">
+              <div class="mini-card-title">Топ диагнозы</div>
+              <div style="font-size:11px; color:var(--muted)">март 2025</div>
+            </div>
+            <div id="diagnoses-list"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- PATIENT MODAL -->
+<div class="modal-overlay" id="patient-modal" onclick="if(event.target===this)closePatient()">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-patient-name">—</div>
+        <div class="modal-subtitle" id="modal-patient-id">—</div>
+      </div>
+      <div class="modal-close" onclick="closePatient()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">Основные данные</div>
+        <div class="modal-grid">
+          <div class="modal-field"><label>Дата рождения</label><div class="modal-field-val" id="modal-dob">—</div></div>
+          <div class="modal-field"><label>Телефон</label><div class="modal-field-val" id="modal-phone">—</div></div>
+          <div class="modal-field"><label>Лечащий врач</label><div class="modal-field-val" id="modal-doctor">—</div></div>
+          <div class="modal-field"><label>Страховой полис</label><div class="modal-field-val" id="modal-ins">—</div></div>
+          <div class="modal-field" style="grid-column:span 2"><label>Диагноз / Особенности</label><div class="modal-field-val" id="modal-diag">—</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">История визитов</div>
+        <div class="visit-timeline" id="modal-visits"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closePatient()">Закрыть</button>
+      <button class="btn-filled" onclick="showToast('📝 Редактирование в полной версии'); closePatient()">Редактировать</button>
+      <button class="btn-filled" style="background:var(--accent3)" onclick="openBookingForCurrent()">Записать снова</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-modal" onclick="if(event.target===this)closeBooking()">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Быстрая запись</div>
+        <div class="modal-subtitle">Новый визит — заполните форму</div>
+      </div>
+      <div class="modal-close" onclick="closeBooking()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Фамилия Имя Отчество</label>
+          <input class="form-input" id="book-name" type="text" placeholder="Иванов Иван Иванович">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Телефон</label>
+          <input class="form-input" id="book-phone" type="text" placeholder="+7 (___) ___-__-__">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Специализация</label>
+          <select class="form-select" id="book-spec" onchange="updateDoctors()">
+            <option value="">— Выберите —</option>
+            <option>Терапия</option>
+            <option>Кардиология</option>
+            <option>Неврология</option>
+            <option>УЗИ-диагностика</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Врач</label>
+          <select class="form-select" id="book-doctor">
+            <option value="">— Сначала выберите специализацию —</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Дата</label>
+          <input class="form-input" id="book-date" type="date" value="2025-03-18">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Услуга</label>
+          <select class="form-select">
+            <option>Первичный приём</option>
+            <option>Повторный приём</option>
+            <option>Консультация</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Доступное время</label>
+        <div class="time-slots" id="time-slots-wrap">
+          <div class="time-slot" onclick="selectSlot(this)">09:00</div>
+          <div class="time-slot" onclick="selectSlot(this)">09:30</div>
+          <div class="time-slot busy">10:00</div>
+          <div class="time-slot" onclick="selectSlot(this)">10:30</div>
+          <div class="time-slot busy">11:00</div>
+          <div class="time-slot" onclick="selectSlot(this)">11:30</div>
+          <div class="time-slot" onclick="selectSlot(this)">12:00</div>
+          <div class="time-slot busy">13:00</div>
+          <div class="time-slot" onclick="selectSlot(this)">13:30</div>
+          <div class="time-slot" onclick="selectSlot(this)">14:00</div>
+          <div class="time-slot busy">14:30</div>
+          <div class="time-slot" onclick="selectSlot(this)">15:00</div>
+          <div class="time-slot" onclick="selectSlot(this)">15:30</div>
+          <div class="time-slot busy">16:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeBooking()">Отмена</button>
+      <button class="btn-filled" onclick="confirmBooking()">✓ Записать</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span id="toast-msg">Готово</span>
+</div>
+<script type="text/javascript" src="js/crm_demo.js"></script>
+</body>
+</html>
