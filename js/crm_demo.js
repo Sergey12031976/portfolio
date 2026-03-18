@@ -66,7 +66,7 @@ const DB = {
     },
   ],
 
-  // visitType → цветовой токен (один источник правды для палитры)
+  // visitType → цветовой токен
   visitTypeColor: {
     'Кардиология':  'var(--accent)',
     'Терапия':      'var(--accent)',
