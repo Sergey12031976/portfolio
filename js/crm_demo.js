@@ -157,10 +157,6 @@ const DB = {
   },
 };
 
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  SELECTORS — единственный способ читать данные             ║
-// ╚══════════════════════════════════════════════════════════════╝
-
 const DB_API = {
   getPatient:      (id)       => DB.patients.find(p => p.id === id),
   getDoctor:       (id)       => DB.doctors.find(d => d.id === id),
@@ -173,19 +169,16 @@ const DB_API = {
   getAppointment:  (time, dayIdx) => DB.appointments.find(a => a.time === time && a.dayIdx === dayIdx),
 };
 
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  STATE                                                       ║
-// ╚══════════════════════════════════════════════════════════════╝
+
+//STATE 
 
 const state = {
   activePatientId: null,
   chartMode: 'visits',
 };
 
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  RENDERERS                                                   ║
-// ╚══════════════════════════════════════════════════════════════╝
 
+// RENDERERS
 function renderHourlyChart() {
   const { hourlyLoad, hourlyLabels, peakHourIdx } = DB.ui;
   const max = Math.max(...hourlyLoad);
@@ -310,9 +303,8 @@ function renderPatientModal(patientId) {
     </div>`).join('');
 }
 
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  UI HANDLERS                                                 ║
-// ╚══════════════════════════════════════════════════════════════╝
+
+//UI HANDLERS
 
 function openPatient(patientId) {
   state.activePatientId = patientId;
