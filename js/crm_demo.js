@@ -405,10 +405,6 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  INIT                                                        ║
-// ╚══════════════════════════════════════════════════════════════╝
-
 renderHourlyChart();
 renderSchedule();
 renderBigChart();
